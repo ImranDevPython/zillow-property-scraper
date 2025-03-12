@@ -59,13 +59,29 @@ class ZillowCLI:
         table.add_column("Sq.Ft.", style="blue")
         
         for i, prop in enumerate(properties, 1):
+            # Clean up the values before displaying
+            beds = prop['beds'].replace('bds', '').replace('bd', '') if prop['beds'] != 'N/A' else 'N/A'
+            beds = 'N/A' if beds == '--' else beds
+            
+            baths = prop['baths'].replace('ba', '') if prop['baths'] != 'N/A' else 'N/A'
+            baths = 'N/A' if baths == '--' else baths
+            
+            sqft = prop['sqft'].replace('sqft', '') if prop['sqft'] != 'N/A' else 'N/A'
+            sqft = 'N/A' if sqft == '--' else sqft
+            
+            # Format price with $ and handle N/A
+            if prop['price'] == 'N/A':
+                price = 'N/A'
+            else:
+                price = f"${prop['price']}"
+            
             table.add_row(
                 str(i),
                 prop['address'],
-                prop['price'],
-                prop['beds'],
-                prop['baths'],
-                prop['sqft']
+                price,
+                beds,
+                baths,
+                sqft
             )
         
         console.print(table)
